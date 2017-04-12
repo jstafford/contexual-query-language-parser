@@ -1,0 +1,31 @@
+{
+  "name": "contexual-query-language-parser",
+  "version": "1.0.0",
+  "description": "Contextual Query Language (CQL) Parser in JavaScript",
+  "keywords": [
+    "CQL",
+    "Contextual",
+    "Common",
+    "Query Language",
+    "Parser"
+  ],
+  "bugs": "https://github.com/jstafford/contexual-query-language-parser/issues",
+  "license": "BSD-3-Clause",
+  "author": "Jakub Skoczen <jakub@indexdata.dk>",
+  "contributors": [
+    "Jason K Stafford <jason.stafford@scrycollective.com>"
+  ],
+  "directories": {
+    "lib": "lib",
+    "example": "example"
+  },
+  "repository": "https://github.com/jstafford/contexual-query-language-parser",
+  "scripts": {
+    "build": "",
+    "test": "standard && node my-tests.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "standard": "^10.0.1"
+  }
+}
