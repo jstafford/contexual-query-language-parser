@@ -21,8 +21,8 @@ class CQLModifier {
   }
 
   toXCQL (n, c) {
-    var s = indent(n + 1, c) + '<modifier>\n'
-    s += s + indent(n + 2, c) + '<name>' + this.name + '</name>\n'
+    let s = `${indent(n + 1, c)}<modifier>\n`
+    s = s + indent(n + 2, c) + '<name>' + this.name + '</name>\n'
     if (this.relation != null) {
       s = s + indent(n + 2, c) + '<relation>' + this.relation + '</relation>\n'
     }
@@ -34,10 +34,10 @@ class CQLModifier {
   }
 
   toFQ () {
-        // we ignore modifier relation symbol, for value-less modifiers
-        // we assume 'true'
-    var value = this.value.length > 0 ? this.value : 'true'
-    var s = '"' + this.name + '": "' + value + '"'
+    // we ignore modifier relation symbol, for value-less modifiers
+    // we assume 'true'
+    let value = this.value.length > 0 ? this.value : 'true'
+    let s = `"${this.name}": "${value}"`
     return s
   }
 }
@@ -55,22 +55,26 @@ class CQLSearchClause {
   }
 
   toString () {
-    var field = this.field
-    var relation = this.relation
+    let field = this.field
+    let relation = this.relation
+    let modifiers = this.modifiers.length > 0 ? '/' + this.modifiers.join('/') : ''
     if (field === this.scf && relation === this.scr) {
         // avoid redundant field/relation
       field = null
       relation = null
     }
+    if (!relation) {
+      relation = ''
+    }
     return (field ? field + ' ' : '') +
-        (relation ? relation : '') +
-        (this.modifiers.length > 0 ? '/' + this.modifiers.join('/') : '') +
-        (relation || this.modifiers.length ? ' ' : '') +
+        relation +
+        modifiers +
+        (relation || modifiers ? ' ' : '') +
         '"' + this.term + '"'
   }
 
   toXCQL (n, c) {
-    var s = indent(n, c) + '<searchClause>\n'
+    let s = indent(n, c) + '<searchClause>\n'
     if (this.fielduri.length > 0) {
       s = s + indent(n + 1, c) + '<prefixes>\n' +
                 indent(n + 2, c) + '<prefix>\n' +
@@ -88,7 +92,7 @@ class CQLSearchClause {
     s = s + indent(n + 2, c) + '<value>' + this.relation + '</value>\n'
     if (this.modifiers.length > 0) {
       s = s + indent(n + 2, c) + '<modifiers>\n'
-      for (var i = 0; i < this.modifiers.length; i++) {
+      for (let i = 0; i < this.modifiers.length; i++) {
         s += this.modifiers[i].toXCQL(n + 2, c)
       }
       s = s + indent(n + 2, c) + '</modifiers>\n'
@@ -100,14 +104,14 @@ class CQLSearchClause {
   }
 
   toFQ () {
-    var s = '{"term": "' + this.term + '"'
+    let s = '{"term": "' + this.term + '"'
     if (this.field.length > 0 && this.field !== this.scf) {
       s += ', "field": "' + this.field + '"'
     }
     if (this.relation.length > 0 && this.relation !== this.scr) {
       s += ', "relation": "' + this._mapRelation(this.relation) + '"'
     }
-    for (var i = 0; i < this.modifiers.length; i++) {
+    for (let i = 0; i < this.modifiers.length; i++) {
           // since modifiers are mapped to keys, ignore the reserved ones
       if (this.modifiers[i].name === 'term' ||
             this.modifiers[i].name === 'field' ||
@@ -161,12 +165,12 @@ class CQLBoolean {
   }
 
   toXCQL (n, c) {
-    var s = indent(n, c) + '<triple>\n'
+    let s = indent(n, c) + '<triple>\n'
     s = s + indent(n + 1, c) + '<boolean>\n' +
             indent(n + 2, c) + '<value>' + this.op + '</value>\n'
     if (this.modifiers.length > 0) {
       s = s + indent(n + 2, c) + '<modifiers>\n'
-      for (var i = 0; i < this.modifiers.length; i++) {
+      for (let i = 0; i < this.modifiers.length; i++) {
         s += this.modifiers[i].toXCQL(n + 2, c)
       }
       s = s + indent(n + 2, c) + '</modifiers>\n'
@@ -182,14 +186,14 @@ class CQLBoolean {
   }
 
   toFQ (n, c, nl) {
-    var s = '{"op": "' + this.op + '"'
-      // proximity modifiers
-    for (var i = 0; i < this.modifiers.length; i++) {
+    let s = '{"op": "' + this.op + '"'
+    // proximity modifiers
+    for (let i = 0; i < this.modifiers.length; i++) {
       s += ', ' + this.modifiers[i].toFQ()
     }
     s += ',' + nl + indent(n, c) + ' "s1": ' + this.left.toFQ(n + 1, c, nl)
     s += ',' + nl + indent(n, c) + ' "s2": ' + this.right.toFQ(n + 1, c, nl)
-    var fill = n && c ? ' ' : ''
+    let fill = n && c ? ' ' : ''
     s += nl + indent(n - 1, c) + fill + '}'
     return s
   }
@@ -303,14 +307,14 @@ class CQLParser {
     return this.tree.toString()
   }
 
+  _isBoolean (s) {
+    return (s === 'and' || s === 'or' || s === 'not' || s === 'prox')
+  }
+
   _parseQuery (field, relation, modifiers) {
-    var left = this._parseSearchClause(field, relation, modifiers)
-    while (this.look === 's' && (
-                    this.lval === 'and' ||
-                    this.lval === 'or' ||
-                    this.lval === 'not' ||
-                    this.lval === 'prox')) {
-      var b = new CQLBoolean()
+    let left = this._parseSearchClause(field, relation, modifiers)
+    while (this.look === 's' && this._isBoolean(this.lval)) {
+      let b = new CQLBoolean()
       b.op = this.lval
       this._move()
       b.modifiers = this._parseModifiers()
@@ -322,18 +326,18 @@ class CQLParser {
   }
 
   _parseModifiers () {
-    var ar = []
+    let ar = []
     while (this.look === '/') {
       this._move()
       if (this.look !== 's' && this.look !== 'q') {
         throw new Error('Invalid modifier.')
       }
 
-      var name = this.lval
+      let name = this.lval
       this._move()
       if (this.look.length > 0 &&
            this._strchr('<>=', this.look.charAt(0))) {
-        var rel = this.look
+        let rel = this.look
         this._move()
         if (this.look !== 's' && this.look !== 'q') {
           throw new Error('Invalid relation within the modifier.')
@@ -371,11 +375,7 @@ class CQLParser {
       let first = this.val   // dont know if field or term yet
       this._move()
       if (this.look === 'q' ||
-                    (this.look === 's' &&
-                     this.lval !== 'and' &&
-                     this.lval !== 'or' &&
-                     this.lval !== 'not' &&
-                     this.lval !== 'prox')) {
+                    (this.look === 's' && !this._isBoolean(this.lval))) {
         let rel = this.val    // string relation
         this._move()
         return this._parseSearchClause(first, rel,
@@ -388,13 +388,13 @@ class CQLParser {
                                                this._parseModifiers())
       } else {
         // it's a search term
-        var pos = field.indexOf('.')
-        var pre = ''
-        if (pos !== -1) {
+        let pos = field.indexOf('.')
+        let pre = ''
+        if (pos >= 0) {
           pre = field.substring(0, pos)
         }
 
-        var uri = this._lookupPrefix(pre)
+        let uri = this._lookupPrefix(pre)
         if (uri.length > 0) {
           field = field.substring(pos + 1)
         }
@@ -406,12 +406,12 @@ class CQLParser {
           pre = relation.substring(0, pos)
         }
 
-        var reluri = this._lookupPrefix(pre)
+        let reluri = this._lookupPrefix(pre)
         if (reluri.Length > 0) {
           relation = relation.Substring(pos + 1)
         }
 
-        var sc = new CQLSearchClause(field,
+        let sc = new CQLSearchClause(field,
                         uri,
                         relation,
                         reluri,
@@ -460,7 +460,7 @@ class CQLParser {
       return
     }
     // current char
-    var c = this.qs.charAt(this.qi)
+    let c = this.qs.charAt(this.qi)
     // separators
     if (this._strchr('()/', c)) {
       this.look = c
@@ -479,10 +479,10 @@ class CQLParser {
     } else if (this._strchr("\"'", c)) {
       this.look = 'q'
       // remember quote char
-      var mark = c
+      let mark = c
       this.qi++
       this.val = ''
-      var escaped = false
+      let escaped = false
       while (this.qi < this.ql) {
         if (!escaped && this.qs.charAt(this.qi) === mark) {
           break
