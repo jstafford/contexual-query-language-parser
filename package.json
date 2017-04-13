@@ -15,6 +15,7 @@
   "contributors": [
     "Jason K Stafford <jason.stafford@scrycollective.com>"
   ],
+  "main": "lib/cql.js",
   "directories": {
     "lib": "lib",
     "example": "example"
