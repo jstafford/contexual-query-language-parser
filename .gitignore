@@ -1,8 +1,8 @@
 # Coverage directory used by tools like istanbul
-/coverage/
+coverage
 
 # Dependency directory
-/node_modules/
+node_modules
 
 # Logs
 *.log

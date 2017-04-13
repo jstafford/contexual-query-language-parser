@@ -21,11 +21,30 @@
   },
   "repository": "https://github.com/jstafford/contexual-query-language-parser",
   "scripts": {
-    "build": "",
+    "build": "rimraf lib && babel src --out-dir lib",
     "test": "standard && node my-tests.js"
   },
   "dependencies": {},
   "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-eslint": "^7.2.2",
+    "babel-preset-env": "^1.3.3",
+    "eslint-plugin-flowtype": "^2.30.4",
+    "rimraf": "^2.6.1",
     "standard": "^10.0.1"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ]
+  },
+  "standard": {
+    "ignore": [
+      "/lib/"
+    ],
+    "parser": "babel-eslint",
+    "plugins": [
+      "flowtype"
+    ]
   }
 }

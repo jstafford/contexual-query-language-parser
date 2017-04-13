@@ -1,5 +1,5 @@
 const DEFAULT_SERVER_CHOICE_FIELD = 'cql.serverChoice'
-const DEFAULT_SERVER_CHOICE_RELATION = 'scr'
+const DEFAULT_SERVER_CHOICE_RELATION = '='
 
 const indent = (n, c) => {
   let s = ''
@@ -184,7 +184,9 @@ class CQLBoolean {
   toFQ (n, c, nl) {
     var s = '{"op": "' + this.op + '"'
       // proximity modifiers
-    for (var i = 0; i < this.modifiers.length; i++) { s += ', ' + this.modifiers[i].toFQ() }
+    for (var i = 0; i < this.modifiers.length; i++) {
+      s += ', ' + this.modifiers[i].toFQ()
+    }
     s += ',' + nl + indent(n, c) + ' "s1": ' + this.left.toFQ(n + 1, c, nl)
     s += ',' + nl + indent(n, c) + ' "s2": ' + this.right.toFQ(n + 1, c, nl)
     var fill = n && c ? ' ' : ''
