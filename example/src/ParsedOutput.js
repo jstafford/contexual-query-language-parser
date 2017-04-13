@@ -20,8 +20,8 @@ class ParsedOutput extends Component {
     return (
       <div>
         <p>{parserType}:</p>
-        <TextArea value={parsedOutput} minRows='4' maxRows='80' style={styles} />
-        <TextArea value={parsedString} minRows='4' maxRows='80' style={styles} />
+        <TextArea value={parsedOutput} minRows={4} maxRows={80} style={styles} />
+        <TextArea value={parsedString} minRows={4} maxRows={80} style={styles} />
       </div>
     )
   }

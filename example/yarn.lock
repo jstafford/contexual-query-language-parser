@@ -1300,7 +1300,7 @@ content-type@~1.0.2:
 
 contexual-query-language-parser@jstafford/contexual-query-language-parser:
   version "1.0.0"
-  resolved "https://codeload.github.com/jstafford/contexual-query-language-parser/tar.gz/e94845fb8ae34a113cc82a0aac8915a5f79fe3e7"
+  resolved "https://codeload.github.com/jstafford/contexual-query-language-parser/tar.gz/f8fcc36d18b6e8f516baee679af7b8a943d86462"
 
 convert-source-map@^1.1.0:
   version "1.5.0"

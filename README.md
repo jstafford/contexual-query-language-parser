@@ -13,3 +13,6 @@ to make it a node package and move it into the ES6 world.
 
 CQL specification, including the grammar and detailed description of the
 language: [CQL specs](http://www.loc.gov/standards/sru/cql/)
+
+There is a slightly modified version of the specification, which has been
+taken over by OASIS available at [searchRetrieve: Part 5. CQL](http://docs.oasis-open.org/search-ws/searchRetrieve/v1.0/os/part5-cql/searchRetrieve-v1.0-os-part5-cql.html)
