@@ -1,0 +1,31 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "contexual-query-language-parser": "jstafford/contexual-query-language-parser",
+    "prop-types": "^15.5.8",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-redux": "^5.0.4",
+    "react-textarea-autosize": "^4.0.5",
+    "redux": "^3.6.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^7.2.2",
+    "eslint-plugin-flowtype": "^2.30.4",
+    "react-scripts": "^0.9.5",
+    "standard": "^10.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "standard && react-scripts test --env=jsdom"
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "plugins": [
+      "flowtype"
+    ]
+  }
+}
